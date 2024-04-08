@@ -1,105 +1,20 @@
-export const pessoasSeed = [
-  { id: 1, name: 'Guga', val: 1, isInfected: true },
-  { id: 2, name: 'Eduardo', val: 2, isInfected: true },
-  { id: 3, name: 'Zeca', val: 5, isInfected: true },
-  { id: 4, name: 'Bruno', val: 1, isInfected: true },
-  { id: 5, name: 'Bruno', val: 6, isInfected: true },
-  { id: 6, name: 'Otavio', val: 6, isInfected: true },
-  { id: 7, name: 'Julia', val: 4, isInfected: false },
-  { id: 8, name: 'Carlos', val: 9, isInfected: true },
-  { id: 9, name: 'Daniela', val: 5, isInfected: true },
-  { id: 10, name: 'Kleber', val: 10, isInfected: false },
-  { id: 11, name: 'Fernanda', val: 3, isInfected: true },
-  { id: 12, name: 'Vitor', val: 9, isInfected: true },
-  { id: 13, name: 'Wagner', val: 1, isInfected: false },
-  { id: 14, name: 'Kleber', val: 2, isInfected: false },
-  { id: 15, name: 'Igor', val: 4, isInfected: true },
-  { id: 16, name: 'Otavio', val: 9, isInfected: false },
-  { id: 17, name: 'Sabrina', val: 7, isInfected: true },
-  { id: 18, name: 'Ursula', val: 2, isInfected: true },
-  { id: 19, name: 'Zeca', val: 5, isInfected: false },
-  { id: 20, name: 'Fernanda', val: 9, isInfected: true },
-  { id: 21, name: 'Igor', val: 8, isInfected: true },
-  { id: 22, name: 'Eduardo', val: 1, isInfected: true },
-  { id: 23, name: 'Xuxa', val: 1, isInfected: false },
-  { id: 24, name: 'Bruno', val: 3, isInfected: true },
-  { id: 25, name: 'Leticia', val: 9, isInfected: true },
-  { id: 26, name: 'Zeca', val: 6, isInfected: true },
-  { id: 27, name: 'Igor', val: 8, isInfected: true },
-  { id: 28, name: 'Ursula', val: 3, isInfected: false },
-  { id: 29, name: 'Ana', val: 2, isInfected: true },
-  { id: 30, name: 'Quirino', val: 7, isInfected: false },
-  { id: 31, name: 'Vitor', val: 1, isInfected: false },
-  { id: 32, name: 'Fernanda', val: 7, isInfected: false },
-  { id: 33, name: 'Daniela', val: 2, isInfected: true },
-  { id: 34, name: 'Ana', val: 5, isInfected: true },
-  { id: 35, name: 'Julia', val: 10, isInfected: true },
-  { id: 36, name: 'Eduardo', val: 7, isInfected: false },
-  { id: 37, name: 'Fernanda', val: 4, isInfected: true },
-  { id: 38, name: 'Wagner', val: 3, isInfected: true },
-  { id: 39, name: 'Igor', val: 6, isInfected: false },
-  { id: 40, name: 'Julia', val: 9, isInfected: true },
-  { id: 41, name: 'Bruno', val: 8, isInfected: false },
-  { id: 42, name: 'Kleber', val: 10, isInfected: true },
-  { id: 43, name: 'Quirino', val: 8, isInfected: true },
-  { id: 44, name: 'Igor', val: 2, isInfected: false },
-  { id: 45, name: 'Ana', val: 8, isInfected: true },
-  { id: 46, name: 'Daniela', val: 5, isInfected: false },
-  { id: 47, name: 'Otavio', val: 4, isInfected: true },
-  { id: 48, name: 'Bruno', val: 2, isInfected: false },
-  { id: 49, name: 'Daniela', val: 1, isInfected: true },
-  { id: 50, name: 'Sabrina', val: 9, isInfected: true },
-];
+import { Pessoa, Link } from "../types/GraphTypes";
 
-export const relacoes = [
-  { source: 1, target: 2 },
-  { source: 2, target: 1 },
-  { source: 1, target: 1 },
-  { source: 2, target: 3 },
-  { source: 1, target: 3 },
-  { source: 2, target: 1 },
-  { source: 1, target: 1 },
-  { source: 8, target: 2 },
-  { source: 1, target: 7 },
-  { source: 3, target: 7 },
-  { source: 7, target: 10 },
-  { source: 7, target: 7 },
-  { source: 2, target: 10 },
-  { source: 8, target: 4 },
-  { source: 15, target: 3 },
-  { source: 6, target: 1 },
-  { source: 13, target: 5 },
-  { source: 10, target: 5 },
-  { source: 7, target: 17 },
-  { source: 4, target: 15 },
-  { source: 18, target: 15 },
-  { source: 18, target: 15 },
-  { source: 7, target: 18 },
-  { source: 6, target: 10 },
-  { source: 18, target: 6 },
-  { source: 12, target: 18 },
-  { source: 9, target: 15 },
-  { source: 24, target: 7 },
-  { source: 22, target: 8 },
-  { source: 4, target: 8 },
-  { source: 11, target: 20 },
-  { source: 31, target: 19 },
-  { source: 7, target: 32 },
-  { source: 11, target: 8 },
-  { source: 35, target: 5 },
-  { source: 17, target: 32 },
-  { source: 21, target: 31 },
-  { source: 33, target: 8 },
-  { source: 35, target: 5 },
-  { source: 6, target: 29 },
-  { source: 30, target: 28 },
-  { source: 8, target: 25 },
-  { source: 18, target: 16 },
-  { source: 9, target: 41 },
-  { source: 18, target: 12 },
-  { source: 4, target: 45 },
-  { source: 10, target: 35 },
-  { source: 27, target: 13 },
-  { source: 2, target: 1 },
-  { source: 44, target: 27 },
-];
+export function genRandomSeeds(tamanho: number) {
+  const pessoasSeed: Pessoa[] = [];
+  const LinksSeed: Link[] = [];
+
+  for (let i = 0; i < tamanho; i++) {
+    const isInfected = false;
+    const val = Math.floor(Math.random() * 10) + 1;
+    pessoasSeed.push({ id: i, name: `Pessoa ${i}`, val, isInfected });
+  }
+
+  for (let i = 0; i < tamanho; i++) {
+    const source = Math.floor(Math.random() * i);
+    const target = Math.floor(Math.random() * tamanho);
+    LinksSeed.push({ source, target });
+  }
+
+  return { pessoasSeed, LinksSeed };
+}
