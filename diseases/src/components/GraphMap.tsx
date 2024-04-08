@@ -1,8 +1,8 @@
-import { useState, useCallback, useEffect } from 'react';
-import { ForceGraph3D } from 'react-force-graph';
-import { genRandomSeeds } from '../utils/seed';
+import { useState, useCallback, useEffect } from "react";
+import { ForceGraph3D } from "react-force-graph";
+import { genRandomSeeds } from "../utils/seed";
 
-import { Graph, Pessoa } from '../types/GraphTypes';
+import { Graph, Pessoa } from "../types/GraphTypes";
 
 interface IGraphMapProps {
   isAddingPerson: boolean;
@@ -11,18 +11,11 @@ interface IGraphMapProps {
   setPersonName: (personName: string) => void;
 }
 
-export function GraphMap({
-  isAddingPerson,
-  setIsAddingPerson,
-  personName,
-  setPersonName,
-}: IGraphMapProps) {
-  const pessoasSeed = genRandomSeeds(100);
+export function GraphMap({}: IGraphMapProps) {
+  const pessoasSeed = genRandomSeeds();
 
-  const [pessoas, setPessoas] = useState<Graph>({
-    nodes: pessoasSeed.pessoasSeed,
-    links: pessoasSeed.LinksSeed,
-  });
+  const [pessoas, setPessoas] = useState<Graph>(pessoasSeed);
+
   const [firstSelectedNode, setFirstSelectedNode] = useState<Pessoa | null>(
     null
   );
@@ -92,17 +85,23 @@ export function GraphMap({
 
   useEffect(() => {
     setInterval(() => {
-      setPessoas(({ nodes, links }) => {
-        const newNodes = nodes.slice();
-        const newLinks = links.slice();
+      const { nodes, links } = pessoas;
+      const infectedNodes = nodes.filter((n) => n.isInfected);
 
-        const infectedNodes = newNodes.filter((n) => n.isInfected);
+      links.map((l) => {
+        const source = l.source.id;
+        const target = l.target.id;
 
-        return { nodes: newNodes, links: newLinks };
+        if (infectedNodes.some((n) => n.id === source)) {
+          nodes[target].isInfected = true;
+        }
+
+        return l;
       });
-    }, 10000);
-  }, []);
 
+      setPessoas({ nodes: nodes, links: links });
+    }, 3000);
+  }, []);
   return (
     <ForceGraph3D
       enableNodeDrag={false}
@@ -113,7 +112,7 @@ export function GraphMap({
       dagLevelDistance={50}
       nodeVal={(node) => (node.isInfected ? 10 : 5)}
       dagNodeFilter={(node) => !node.isInfected}
-      nodeColor={(node) => (node.isInfected ? 'red' : '#A7C7E7')}
+      nodeColor={(node) => (node.isInfected ? "red" : "#A7C7E7")}
       backgroundColor="#141414"
       nodeLabel={(node) => node.name}
     />
