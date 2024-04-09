@@ -1,7 +1,7 @@
 
 import { Graph } from "../types/GraphTypes";
 
-export function genRandomSeeds({ N = 100 } = {}): Graph {
+export function genRandomSeeds({ N = 200 } = {}): Graph {
   return {
     nodes: [...Array(N).keys()].map(id => ({
       id,

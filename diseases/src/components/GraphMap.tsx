@@ -86,7 +86,9 @@ export function GraphMap({}: IGraphMapProps) {
   useEffect(() => {
     setInterval(() => {
       const { nodes, links } = pessoas;
-      const infectedNodes = nodes.filter((n) => n.isInfected);
+      const infectedNodes = nodes
+        .map((l) => ({ ...l }))
+        .filter((n) => n.isInfected);
 
       links.map((l) => {
         const source = l.source.id;
