@@ -1,8 +1,12 @@
-import { useState, useCallback, useEffect } from "react";
-import { ForceGraph3D } from "react-force-graph";
-import { genRandomSeeds } from "../utils/seed";
+import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
+import { ForceGraph3D } from 'react-force-graph';
+import {
+  CSS2DObject,
+  CSS2DRenderer,
+} from 'three/addons/renderers/CSS2DRenderer.js';
 
-import { Graph, Pessoa } from "../types/GraphTypes";
+import { genRandomSeeds } from '../utils/seed';
+import { Graph, Link, Pessoa } from '../types/GraphTypes';
 
 interface IGraphMapProps {
   isAddingPerson: boolean;
@@ -13,15 +17,10 @@ interface IGraphMapProps {
 
 export function GraphMap({}: IGraphMapProps) {
   const pessoasSeed = genRandomSeeds();
+  const extraRenderers = [new CSS2DRenderer() as any];
+  const fgRef = useRef();
 
   const [pessoas, setPessoas] = useState<Graph>(pessoasSeed);
-
-  const [firstSelectedNode, setFirstSelectedNode] = useState<Pessoa | null>(
-    null
-  );
-  const [secondSelectedNode, setSecondSelectedNode] = useState<Pessoa | null>(
-    null
-  );
 
   const handleClick = useCallback(
     (node: Pessoa) => {
@@ -44,79 +43,54 @@ export function GraphMap({}: IGraphMapProps) {
     [pessoas, setPessoas]
   );
 
-  function getLastNode() {
-    return pessoas.nodes[pessoas.nodes.length - 1];
-  }
+  // useEffect(() => {
+  //   setInterval(() => {
+  //     const { nodes, links } = pessoas;
+  //     const infectedNodes = nodes.filter((n) => n.isInfected);
 
-  function addPerson(person1?: Pessoa, person2?: Pessoa) {
-    const { nodes, links } = pessoas;
+  //     links.map((l) => {
+  //       const source = l.source.id;
+  //       const target = l.target.id;
 
-    const newNodes = nodes.slice();
-    const newLinks = links.slice();
+  //       if (infectedNodes.some((n) => n.id === source)) {
+  //         nodes[target].isInfected = true;
+  //       }
 
-    if (!person1 || !person2) {
-      newNodes.push({
-        id: newNodes.length,
-        name: `Pessoa ${newNodes.length}`,
-        val: getLastNode().val + 1,
-        isInfected: false,
-      });
-    }
+  //       return l;
+  //     });
 
-    newNodes.push({
-      id: newNodes.length,
-      name: `Pessoa ${newNodes.length}`,
-      val: getLastNode().val + 1,
-      isInfected: false,
-    });
-
-    newLinks.push({
-      source: person1!.id,
-      target: newNodes.length - 1,
-    });
-
-    newLinks.push({
-      source: person2!.id,
-      target: newNodes.length - 1,
-    });
-
-    setPessoas({ nodes: newNodes, links: newLinks });
-  }
-
-  useEffect(() => {
-    setInterval(() => {
-      const { nodes, links } = pessoas;
-      const infectedNodes = nodes
-        .map((l) => ({ ...l }))
-        .filter((n) => n.isInfected);
-
-      links.map((l) => {
-        const source = l.source.id;
-        const target = l.target.id;
-
-        if (infectedNodes.some((n) => n.id === source)) {
-          nodes[target].isInfected = true;
-        }
-
-        return l;
-      });
-
-      setPessoas({ nodes: nodes, links: links });
-    }, 3000);
-  }, []);
+  //     setPessoas({ nodes: nodes, links: links });
+  //   }, 3000);
+  // }, []);
   return (
     <ForceGraph3D
+      ref={fgRef}
       enableNodeDrag={false}
       // onNodeClick={(node) => (isAddingPerson ? addPerson(node) : handleClick)}
       onNodeClick={handleClick}
       graphData={pessoas}
       linkWidth={1.5}
-      dagLevelDistance={50}
       nodeVal={(node) => (node.isInfected ? 10 : 5)}
-      dagNodeFilter={(node) => !node.isInfected}
-      nodeColor={(node) => (node.isInfected ? "red" : "#A7C7E7")}
-      backgroundColor="#141414"
+      nodeColor={(node) => (node.isInfected ? 'red' : '#63affb')}
+      backgroundColor="#fafafa"
+      linkColor={(link: any) => {
+        return link.source.isInfected && link.target.isInfected
+          ? 'red'
+          : '#333';
+      }}
       nodeLabel={(node) => node.name}
+      nodeOpacity={0.9}
+      nodeThreeObject={(node) => {
+        const nodeEl = document.createElement('div');
+        nodeEl.textContent = node.name;
+        nodeEl.style.color = '#333';
+        nodeEl.style.fontSize = '8px';
+        nodeEl.style.fontWeight = '600';
+        nodeEl.className = 'node-label';
+        return new CSS2DObject(nodeEl);
+      }}
+      nodeThreeObjectExtend={true}
+      extraRenderers={extraRenderers}
     />
   );
 }
