@@ -1,12 +1,11 @@
-import { ForceGraph3D } from "react-force-graph";
-import { getRandomAdjacencyList } from "../utils/seed";
+import { ForceGraph3D } from 'react-force-graph';
+import { getRandomAdjacencyList } from '../utils/seed';
 import {
   CSS2DObject,
   CSS2DRenderer,
-} from "three/examples/jsm/renderers/CSS2DRenderer.js";
-import { useCallback } from "react";
-import { Graph, Pessoa } from "../types/GraphTypes";
-import { useState } from "react";
+} from 'three/examples/jsm/renderers/CSS2DRenderer.js';
+import { useCallback, useState } from 'react';
+import { Graph, Pessoa } from '../types/GraphTypes';
 
 export function GraphMap() {
   const pessoasSeed = getRandomAdjacencyList();
@@ -14,66 +13,93 @@ export function GraphMap() {
   const [pessoas, setPessoas] = useState<Graph>(pessoasSeed);
 
   function getAdjacentNodes(
-    adjacencyList: Record<number, { target: number; value: number }[]>,
+    adjacencyList: Record<
+      number,
+      {
+        outgoing: { target: number; value: number }[];
+        incoming: { source: number; value: number }[];
+      }
+    >,
     targetNodeId: number
   ): number[] {
-    const adjacentNodes: number[] = [];
-    for (const [nodeId, connections] of Object.entries(adjacencyList)) {
-      const hasTarget = connections.some(
-        (connection) => connection.target === targetNodeId
-      );
-      if (hasTarget) {
-        adjacentNodes.push(parseInt(nodeId));
-      }
+    const adjacentNodes = new Set<number>();
 
-      if (parseInt(nodeId) === targetNodeId) {
-        connections.forEach((connection) => {
-          adjacentNodes.push(connection.target);
-        });
-      }
-    }
-    return adjacentNodes;
+    adjacencyList[targetNodeId].outgoing.forEach((connection) => {
+      adjacentNodes.add(connection.target);
+    });
+
+    adjacencyList[targetNodeId].incoming.forEach((connection) => {
+      adjacentNodes.add(connection.source);
+    });
+
+    return Array.from(adjacentNodes);
   }
 
-  function BFS(nodeId: number) {
-    let queue: number[] = [nodeId];
-    let newNodes = [...pessoas.nodes];
+  const updateGraph = (nodes: Pessoa[]) => {
+    const newNodes = [...nodes];
+
+    newNodes.forEach((n) => {
+      n.fx = n.x;
+      n.fy = n.y;
+      n.fz = n.z;
+    });
+
+    setPessoas((prevPessoas) => ({
+      ...prevPessoas,
+      nodes: newNodes,
+    }));
+  };
+
+  const BFS = (nodeId: number) => {
+    const queue = [nodeId];
+    const newNodes = [...pessoas.nodes];
     newNodes[nodeId].isInfected = true;
 
-    const visitNode = () => {
+    updateGraph(newNodes);
+
+    const startInfection = () => {
+      setTimeout(() => {
+        processNode();
+      }, 500);
+    };
+
+    const processNode = () => {
       if (queue.length === 0) {
         return;
       }
 
-      const current = queue.shift();
-      const adjNodes = getAdjacentNodes(
-        pessoas.adjacencyList,
-        current as number
-      );
+      const u = queue.shift();
 
-      adjNodes.forEach((adjNodeId) => {
-        if (!newNodes[adjNodeId].isInfected) {
-          newNodes[adjNodeId].isInfected = true;
-          queue.push(adjNodeId);
+      if (!u) return;
+
+      const adjNodes = getAdjacentNodes(pessoas.adjacencyList, u);
+      let index = 0;
+
+      const infectNode = () => {
+        if (index < adjNodes.length) {
+          const v = adjNodes[index];
+          if (!newNodes[v].isInfected) {
+            newNodes[v].isInfected = true;
+            queue.push(v);
+
+            updateGraph(newNodes);
+
+            index++;
+            setTimeout(infectNode, 500);
+          } else {
+            index++;
+            infectNode();
+          }
+        } else {
+          setTimeout(processNode, 100);
         }
-      });
+      };
 
-      newNodes.forEach((n) => {
-        n.fx = n.x;
-        n.fy = n.y;
-        n.fz = n.z;
-      });
-
-      setPessoas((prevPessoas) => ({
-        ...prevPessoas,
-        nodes: newNodes,
-      }));
-
-      setTimeout(visitNode, 1000); // Delay the next visit by 1 second
+      infectNode();
     };
 
-    visitNode();
-  }
+    startInfection();
+  };
 
   const handleClick = useCallback(
     (node: Pessoa) => {
@@ -87,20 +113,21 @@ export function GraphMap() {
       graphData={pessoas}
       onNodeClick={handleClick}
       nodeVal={15}
-      nodeColor={(node) => (node.isInfected ? "red" : "blue")}
+      nodeColor={(node) => (node.isInfected ? '#FF9580' : '#80FFEA')}
       nodeLabel={(node) => `${node.name} - ${node.id}`}
       nodeOpacity={0.9}
       nodeThreeObject={(node) => {
-        const nodeEl = document.createElement("div");
+        const nodeEl = document.createElement('div');
         nodeEl.textContent = `${node.name} - ${node.id}`;
-        nodeEl.style.color = "#fff";
-        nodeEl.style.fontSize = "12px";
-        nodeEl.style.fontWeight = "600";
-        nodeEl.className = "node-label";
+        nodeEl.style.color = '#fff';
+        nodeEl.style.fontSize = '12px';
+        nodeEl.style.fontWeight = '600';
+        nodeEl.className = 'node-label';
         return new CSS2DObject(nodeEl);
       }}
       nodeThreeObjectExtend={true}
       extraRenderers={extraRenderers}
+      backgroundColor="#22212C"
     />
   );
 }

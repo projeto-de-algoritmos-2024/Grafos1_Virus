@@ -9,18 +9,13 @@ function App() {
 
   return (
     <div className="w-screen h-screen overflow-hidden">
-      <Modal
+      {/* <Modal
         isAddingPerson={isAddingPerson}
         setIsAddingPerson={setIsAddingPerson}
         personName={personName}
         setPersonName={setPersonName}
-      />
-      <GraphMap
-        isAddingPerson={isAddingPerson}
-        setIsAddingPerson={setIsAddingPerson}
-        personName={personName}
-        setPersonName={setPersonName}
-      />
+      /> */}
+      <GraphMap />
     </div>
   );
 }

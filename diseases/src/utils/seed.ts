@@ -70,14 +70,14 @@ export function getRandomAdjacencyList({ N = 100, maxConnectionFactor = 5, isola
     });
   });
 
-  // Converte os links em uma lista de adjacências
   const adjacencyList = nodes.reduce((acc, node) => {
-    acc[node.id] = [];
+    acc[node.id] = { outgoing: [], incoming: [] };
     return acc;
   }, {});
 
   links.forEach(link => {
-    adjacencyList[link.source].push({ target: link.target, value: link.value });
+    adjacencyList[link.source].outgoing.push({ target: link.target, value: link.value });
+    adjacencyList[link.target].incoming.push({ source: link.source, value: link.value });
   });
 
   return { nodes, adjacencyList, links };
