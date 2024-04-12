@@ -1,16 +1,17 @@
 import { ForceGraph3D } from 'react-force-graph';
-import { getRandomAdjacencyList } from '../utils/seed';
 import {
   CSS2DObject,
   CSS2DRenderer,
 } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Graph, Pessoa } from '../types/GraphTypes';
+import { useGraph } from '../contexts/GraphContext';
 
 export function GraphMap() {
-  const pessoasSeed = getRandomAdjacencyList();
+  const { graphData } = useGraph();
+
   const extraRenderers = [new CSS2DRenderer() as any];
-  const [pessoas, setPessoas] = useState<Graph>(pessoasSeed);
+  const [pessoas, setPessoas] = useState<Graph>(graphData);
 
   function getAdjacentNodes(
     adjacencyList: Record<
@@ -105,6 +106,10 @@ export function GraphMap() {
     },
     [pessoas]
   );
+
+  useEffect(() => {
+    setPessoas(graphData);
+  }, [graphData]);
 
   return (
     <ForceGraph3D
