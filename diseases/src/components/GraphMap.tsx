@@ -70,8 +70,6 @@ export function GraphMap() {
 
       const u = queue.shift();
 
-      if (!u) return;
-
       const adjNodes = getAdjacentNodes(pessoas.adjacencyList, u);
       let index = 0;
 
@@ -91,7 +89,7 @@ export function GraphMap() {
             infectNode();
           }
         } else {
-          setTimeout(processNode, 100);
+          setTimeout(processNode, 50);
         }
       };
 
