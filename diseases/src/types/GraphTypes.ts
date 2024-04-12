@@ -8,8 +8,17 @@ export interface Pessoa {
   name: string;
   val: number;
   isInfected: boolean;
+  x: number;
+  y: number;
+  z: number;
+  fx: number;
+  fy: number;
+  fz: number;
+  childLinks: Link[];
+
 }
 export interface Graph {
   nodes: Pessoa[];
   links: Link[];
+  adjacencyList: Record<number, { target: number; value: number; }[]>
 }
