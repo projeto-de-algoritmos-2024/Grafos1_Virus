@@ -51,6 +51,8 @@ export function getRandomAdjacencyList({ N = 10, maxConnectionFactor = 5, isolat
     target: link.target,
     value: link.value
   })));
+  console.log(links);
+
 
   return { nodes, adjacencyList, links };
 }

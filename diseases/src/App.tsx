@@ -2,12 +2,26 @@ import './App.css';
 import { Modal } from './components/Modal';
 import { GraphMap } from './components/GraphMap';
 import { GraphProvider } from './contexts/GraphContext';
+import { useState } from 'react';
+import { InfectionModal } from './components/InfectionModal';
 
 function App() {
+  const [hasSelectedInfection, setHasSelectedInfection] = useState(false);
+
   return (
     <GraphProvider>
       <div className="w-screen h-screen overflow-hidden">
-        <Modal />
+        {hasSelectedInfection ? (
+          <InfectionModal
+            hasSelectedInfection={hasSelectedInfection}
+            setHasSelectedInfection={setHasSelectedInfection}
+          />
+        ) : (
+          <Modal
+            hasSelectedInfection={hasSelectedInfection}
+            setHasSelectedInfection={setHasSelectedInfection}
+          />
+        )}
         <GraphMap />
       </div>
     </GraphProvider>

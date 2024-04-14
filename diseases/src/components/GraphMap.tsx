@@ -8,7 +8,8 @@ import { Graph, Pessoa } from '../types/GraphTypes';
 import { useGraph } from '../contexts/GraphContext';
 
 export function GraphMap() {
-  const { graphData } = useGraph();
+  const { graphData, setStartingNode, setEndingNode, startingNode } =
+    useGraph();
 
   const extraRenderers = [new CSS2DRenderer() as any];
   const [pessoas, setPessoas] = useState<Graph>(graphData);
@@ -107,6 +108,14 @@ export function GraphMap() {
     [pessoas]
   );
 
+  const handleSelectNode = (node: Pessoa) => {
+    if (!startingNode) {
+      setStartingNode(node);
+    } else {
+      setEndingNode(node);
+    }
+  };
+
   useEffect(() => {
     setPessoas(graphData);
   }, [graphData]);
@@ -114,14 +123,15 @@ export function GraphMap() {
   return (
     <ForceGraph3D
       graphData={pessoas}
-      onNodeClick={handleClick}
+      // onNodeClick={handleClick} descomentar para rodar BFS
+      onNodeClick={handleSelectNode}
       nodeVal={15}
       nodeColor={(node) => (node.isInfected ? '#FF9580' : '#80FFEA')}
-      nodeLabel={(node) => `${node.name} - ${node.id}`}
+      nodeLabel={(node) => `[${node.id}] ${node.name}`}
       nodeOpacity={0.9}
       nodeThreeObject={(node) => {
         const nodeEl = document.createElement('div');
-        nodeEl.textContent = `${node.name} - ${node.id}`;
+        nodeEl.textContent = `[${node.id}] ${node.name}`;
         nodeEl.style.color = '#fff';
         nodeEl.style.fontSize = '12px';
         nodeEl.style.fontWeight = '600';

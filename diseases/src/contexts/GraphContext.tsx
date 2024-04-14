@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { getRandomAdjacencyList } from '../utils/seed';
-import { Graph } from '../types/GraphTypes';
+import { Graph, Pessoa } from '../types/GraphTypes';
 
 interface GraphContextType {
   graphData: Graph;
@@ -9,6 +9,10 @@ interface GraphContextType {
     maxConnectionFactor: number,
     isolatedFactor: number
   ) => void;
+  startingNode?: Pessoa;
+  setStartingNode: (node: Pessoa | null) => void;
+  endingNode?: Pessoa;
+  setEndingNode: (node: Pessoa | null) => void;
 }
 
 const GraphContext = createContext<GraphContextType | undefined>(undefined);
@@ -17,6 +21,8 @@ export const GraphProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [graphData, setGraphData] = useState<Graph>(getRandomAdjacencyList());
+  const [startingNode, setStartingNode] = useState<Pessoa | null>(null);
+  const [endingNode, setEndingNode] = useState<Pessoa | null>(null);
 
   function getGraphData(
     N: number,
@@ -29,7 +35,16 @@ export const GraphProvider: React.FC<{ children: ReactNode }> = ({
   }
 
   return (
-    <GraphContext.Provider value={{ graphData, getGraphData }}>
+    <GraphContext.Provider
+      value={{
+        graphData,
+        getGraphData,
+        startingNode,
+        setStartingNode,
+        endingNode,
+        setEndingNode,
+      }}
+    >
       {children}
     </GraphContext.Provider>
   );
@@ -42,7 +57,21 @@ export function useGraph(): GraphContextType {
     throw new Error('useGraph must be used within a GraphProvider');
   }
 
-  const { graphData, getGraphData } = context;
+  const {
+    graphData,
+    getGraphData,
+    startingNode,
+    setStartingNode,
+    endingNode,
+    setEndingNode,
+  } = context;
 
-  return { graphData, getGraphData };
+  return {
+    graphData,
+    getGraphData,
+    startingNode,
+    setStartingNode,
+    endingNode,
+    setEndingNode,
+  };
 }
