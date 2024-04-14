@@ -110,7 +110,6 @@ export function GraphMap() {
     new Promise((resolve) => setTimeout(resolve, ms));
 
   const DFS_VISIT = async (node: Pessoa, newNodes: Pessoa[]) => {
-    node.isInfected = true;
     updateGraph(newNodes);
 
     const adjNodes = getAdjacentNodes(pessoas.adjacencyList, node.id);
@@ -118,6 +117,8 @@ export function GraphMap() {
     for (const v of adjNodes) {
       if (!newNodes[v].isInfected) {
         await delay(1000); // Aguarda um segundo antes de infectar o próximo nó
+        node.isInfected = true;
+
         await DFS_VISIT(newNodes[v], newNodes);
       }
     }
@@ -126,9 +127,8 @@ export function GraphMap() {
   const DFS = async (nodeId: number) => {
     const newNodes = [...pessoas.nodes];
     const adjNodes = getAdjacentNodes(pessoas.adjacencyList, nodeId);
-    if (!newNodes[nodeId].isInfected) {
-      newNodes[nodeId].isInfected = true;
-    }
+
+    newNodes[nodeId].isInfected = true;
 
     for (const v of adjNodes) {
       if (!newNodes[v].isInfected) {
