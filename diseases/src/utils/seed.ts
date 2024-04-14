@@ -7,7 +7,7 @@ const names = [
   "Yasmin", "Zacarias"
 ];
 
-export function getRandomAdjacencyList({ N = 10, maxConnectionFactor = 5, isolatedFactor = 0.5 } = {}): Graph {
+export function getRandomAdjacencyList({ N = 20, maxConnectionFactor = 3, isolatedFactor = 0.5 } = {}): Graph {
   const nodes = Array.from({ length: N }, (_, id) => ({
     id,
     name: names[Math.floor(Math.random() * names.length)],

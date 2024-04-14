@@ -8,8 +8,13 @@ import { Graph, Pessoa } from '../types/GraphTypes';
 import { useGraph } from '../contexts/GraphContext';
 
 export function GraphMap() {
-  const { graphData, setStartingNode, setEndingNode, startingNode } =
-    useGraph();
+  const {
+    graphData,
+    setStartingNode,
+    setEndingNode,
+    startingNode,
+    endingNode,
+  } = useGraph();
 
   const extraRenderers = [new CSS2DRenderer() as any];
   const [pessoas, setPessoas] = useState<Graph>(graphData);
@@ -111,8 +116,11 @@ export function GraphMap() {
   const handleSelectNode = (node: Pessoa) => {
     if (!startingNode) {
       setStartingNode(node);
-    } else {
+    } else if (!endingNode) {
       setEndingNode(node);
+    } else {
+      setStartingNode(node);
+      setEndingNode(null);
     }
   };
 
@@ -126,7 +134,17 @@ export function GraphMap() {
       // onNodeClick={handleClick} descomentar para rodar BFS
       onNodeClick={handleSelectNode}
       nodeVal={15}
-      nodeColor={(node) => (node.isInfected ? '#FF9580' : '#80FFEA')}
+      nodeColor={(node) => {
+        if (startingNode && node.id === startingNode.id) {
+          return '#FFCA80';
+        } else if (endingNode && node.id === endingNode.id) {
+          return '#FFCA80';
+        } else if (node.isInfected) {
+          return '#FF9580';
+        } else {
+          return '#80FFEA';
+        }
+      }}
       nodeLabel={(node) => `[${node.id}] ${node.name}`}
       nodeOpacity={0.9}
       nodeThreeObject={(node) => {
