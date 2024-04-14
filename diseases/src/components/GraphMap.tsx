@@ -117,22 +117,25 @@ export function GraphMap() {
 
     for (const v of adjNodes) {
       if (!newNodes[v].isInfected) {
+        await delay(1000); // Aguarda um segundo antes de infectar o próximo nó
         await DFS_VISIT(newNodes[v], newNodes);
-        await delay(1000);
       }
     }
   };
 
-  const DFS = (nodeId: number) => {
+  const DFS = async (nodeId: number) => {
     const newNodes = [...pessoas.nodes];
     const adjNodes = getAdjacentNodes(pessoas.adjacencyList, nodeId);
+    if (!newNodes[nodeId].isInfected) {
+      newNodes[nodeId].isInfected = true;
+    }
 
-    adjNodes.forEach((v) => {
+    for (const v of adjNodes) {
       if (!newNodes[v].isInfected) {
-        DFS_VISIT(newNodes[v], newNodes);
-        setTimeout(() => {}, 1000);
+        await DFS_VISIT(newNodes[v], newNodes);
+        await delay(1000);
       }
-    });
+    }
   };
 
   const handleClick = useCallback(
