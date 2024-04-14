@@ -20,9 +20,27 @@ Adicione 3 ou mais screenshots do projeto em funcionamento.
 
 ## Instalação
 
-**Linguagem**: xxxxxx<br>
-**Framework**: (caso exista)<br>
+**Linguagem**: JS, TSX
+**Framework**: React, ViteJS, Tailwind, NodeJS <br>
 Descreva os pré-requisitos para rodar o seu projeto e os comandos necessários.
+
+NODEJS <br />
+NPM <br />
+YARN <br />
+TYPESCRIPT <br />
+VITE <br />
+REACT THREEJS <br />
+
+**Comandos**
+Para instalar o as dependencias rode o <br />
+```
+yarn install 
+```
+
+Após instalar, para rodar o projeto na sua maquina rode o <br />
+```
+yarn dev 
+```
 
 ## Uso
 
