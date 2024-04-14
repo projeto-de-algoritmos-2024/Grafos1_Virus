@@ -1,11 +1,11 @@
-import { ForceGraph3D } from 'react-force-graph';
+import { ForceGraph3D } from "react-force-graph";
 import {
   CSS2DObject,
   CSS2DRenderer,
-} from 'three/examples/jsm/renderers/CSS2DRenderer.js';
-import { useCallback, useEffect, useState } from 'react';
-import { Graph, Pessoa } from '../types/GraphTypes';
-import { useGraph } from '../contexts/GraphContext';
+} from "three/examples/jsm/renderers/CSS2DRenderer.js";
+import { useCallback, useEffect, useState } from "react";
+import { Graph, Pessoa } from "../types/GraphTypes";
+import { useGraph } from "../contexts/GraphContext";
 
 export function GraphMap() {
   const {
@@ -106,9 +106,38 @@ export function GraphMap() {
     startInfection();
   };
 
+  const delay = (ms: number) =>
+    new Promise((resolve) => setTimeout(resolve, ms));
+
+  const DFS_VISIT = async (node: Pessoa, newNodes: Pessoa[]) => {
+    node.isInfected = true;
+    updateGraph(newNodes);
+
+    const adjNodes = getAdjacentNodes(pessoas.adjacencyList, node.id);
+
+    for (const v of adjNodes) {
+      if (!newNodes[v].isInfected) {
+        await DFS_VISIT(newNodes[v], newNodes);
+        await delay(1000);
+      }
+    }
+  };
+
+  const DFS = (nodeId: number) => {
+    const newNodes = [...pessoas.nodes];
+    const adjNodes = getAdjacentNodes(pessoas.adjacencyList, nodeId);
+
+    adjNodes.forEach((v) => {
+      if (!newNodes[v].isInfected) {
+        DFS_VISIT(newNodes[v], newNodes);
+        setTimeout(() => {}, 1000);
+      }
+    });
+  };
+
   const handleClick = useCallback(
     (node: Pessoa) => {
-      BFS(node.id);
+      DFS(node.id);
     },
     [pessoas]
   );
@@ -132,28 +161,28 @@ export function GraphMap() {
     <ForceGraph3D
       graphData={pessoas}
       // onNodeClick={handleClick} descomentar para rodar BFS
-      onNodeClick={handleSelectNode}
+      onNodeClick={handleClick}
       nodeVal={15}
       nodeColor={(node) => {
         if (startingNode && node.id === startingNode.id) {
-          return '#FFCA80';
+          return "#FFCA80";
         } else if (endingNode && node.id === endingNode.id) {
-          return '#FFCA80';
+          return "#FFCA80";
         } else if (node.isInfected) {
-          return '#FF9580';
+          return "#FF9580";
         } else {
-          return '#80FFEA';
+          return "#80FFEA";
         }
       }}
       nodeLabel={(node) => `[${node.id}] ${node.name}`}
       nodeOpacity={0.9}
       nodeThreeObject={(node) => {
-        const nodeEl = document.createElement('div');
+        const nodeEl = document.createElement("div");
         nodeEl.textContent = `[${node.id}] ${node.name}`;
-        nodeEl.style.color = '#fff';
-        nodeEl.style.fontSize = '12px';
-        nodeEl.style.fontWeight = '600';
-        nodeEl.className = 'node-label';
+        nodeEl.style.color = "#fff";
+        nodeEl.style.fontSize = "12px";
+        nodeEl.style.fontWeight = "600";
+        nodeEl.className = "node-label";
         return new CSS2DObject(nodeEl);
       }}
       nodeThreeObjectExtend={true}
