@@ -8,7 +8,7 @@ const names = [
 ];
 
 export function getRandomAdjacencyList({ N = 10, maxConnectionFactor = 5, isolatedFactor = 0.5 } = {}): Graph {
-  const nodes = [...Array(N).keys()].map(id => ({
+  const nodes = Array.from({ length: N }, (_, id) => ({
     id,
     name: names[Math.floor(Math.random() * names.length)],
     val: Math.round(Math.random() * 10),
@@ -16,8 +16,9 @@ export function getRandomAdjacencyList({ N = 10, maxConnectionFactor = 5, isolat
     group: Math.floor(Math.random() * (1 / isolatedFactor))
   }));
 
-  const groupSizes = nodes.reduce((acc, node) => {
-    acc[node.group] = (acc[node.group] || 0) + 1;
+  const groups = nodes.reduce((acc, node) => {
+    acc[node.group] = acc[node.group] || [];
+    acc[node.group].push(node.id);
     return acc;
   }, {});
 
@@ -26,24 +27,22 @@ export function getRandomAdjacencyList({ N = 10, maxConnectionFactor = 5, isolat
     return acc;
   }, {});
 
-  nodes.forEach(node => {
-    const groupNodes = nodes.filter(n => n.group === node.group && n.id !== node.id);
-    if (groupNodes.length > 0) {
-      const connectionFactor = Math.max(1, Math.round(maxConnectionFactor * (N / groupSizes[node.group]) / N));
-      const uniqueTargets = new Set();
-
-      while (uniqueTargets.size < connectionFactor) {
-        const target = groupNodes[Math.floor(Math.random() * groupNodes.length)].id;
-        if (node.id !== target && !uniqueTargets.has(target)) {
-          uniqueTargets.add(target);
+  Object.values(groups).forEach((group: number[]) => {
+    group.forEach(sourceId => {
+      const targetIds = group.filter(id => id !== sourceId);
+      const shuffleArray = (array: number[]) => {
+        for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]];
         }
-      }
-
-      uniqueTargets.forEach(target => {
-        adjacencyList[node.id].outgoing.push({ target, value: Math.round(Math.random() * 10) });
-        adjacencyList[target].incoming.push({ source: node.id, value: Math.round(Math.random() * 10) });
+      };
+      shuffleArray(targetIds);
+      targetIds.slice(0, maxConnectionFactor).forEach(targetId => {
+        const value = Math.round(Math.random() * 10);
+        adjacencyList[sourceId].outgoing.push({ target: targetId, value });
+        adjacencyList[targetId].incoming.push({ source: sourceId, value });
       });
-    }
+    });
   });
 
   const links = nodes.flatMap(node => adjacencyList[node.id].outgoing.map(link => ({
@@ -51,8 +50,6 @@ export function getRandomAdjacencyList({ N = 10, maxConnectionFactor = 5, isolat
     target: link.target,
     value: link.value
   })));
-  console.log(links);
-
 
   return { nodes, adjacencyList, links };
 }
