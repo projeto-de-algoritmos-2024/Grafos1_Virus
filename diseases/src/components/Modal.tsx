@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useGraph } from '../contexts/GraphContext';
+import { useState } from "react";
+import { useGraph } from "../contexts/GraphContext";
 
 interface IModelProps {
   hasSelectedInfection: boolean;
@@ -14,22 +14,22 @@ export function Modal({ setHasSelectedInfection }: IModelProps) {
 
   function handleClick() {
     if (components < 1) {
-      alert('Número de pessoas deve ser um inteiro maior que 0');
+      alert("Número de pessoas deve ser um inteiro maior que 0");
       return;
     }
 
     if (maxConnectionFactor < 1) {
-      alert('Fator de conexões máximas deve ser um inteiro maior que 0');
+      alert("Fator de conexões máximas deve ser um inteiro maior que 0");
       return;
     }
 
     if (maxConnectionFactor > components - 1) {
-      alert('Fator de conexões máximas deve ser menor que o número de pessoas');
+      alert("Fator de conexões máximas deve ser menor que o número de pessoas");
       return;
     }
 
     if (isolatedFactor < 0 || isolatedFactor > 1) {
-      alert('Fator de isolamento deve ser um número entre 0 e 1');
+      alert("Fator de isolamento deve ser um número entre 0 e 1");
       return;
     }
 
@@ -38,7 +38,10 @@ export function Modal({ setHasSelectedInfection }: IModelProps) {
 
   return (
     <div className="w-[250px] bg-stone-800 absolute top-4 left-4 z-[1000] rounded-lg p-4 text-white border-violet-900 border-2">
-      <h1 className="text-2xl font-semibold">Diseases</h1>
+      <h1 className="text-2xl font-semibold">Bem Vindo ao Grafo de Doenças</h1>
+      <p className="text-xs text-stone-400">
+        O quão longe uma doença pode se espalhar por um grupo de pessoas?
+      </p>
       <div className="mt-4 flex flex-col gap-2">
         <h1>Pessoas</h1>
         <input
