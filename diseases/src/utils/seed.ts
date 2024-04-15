@@ -1,13 +1,13 @@
 import { Graph } from "../types/GraphTypes";
 
 const names = [
-  "Ana", "Bruno", "Carlos", "Daniela", "Eduardo", "Fernanda", "Gabriel", "Helena",
-  "Igor", "Julia", "Kauê", "Larissa", "Marcelo", "Natalia", "Otávio", "Patrícia",
-  "Quentin", "Rafaela", "Samuel", "Tatiane", "Umberto", "Viviane", "Wagner", "Xuxa",
+  "Ana", "Bruno", "Carlos", "Daniela", "Eduardo", "Fernanda", "Gustavo", "Helena",
+  "Igor", "Julia", "Kauê", "Letícia", "Marcelo", "Natalia", "Otávio", "Patrícia",
+  "Quentin", "Rafaela", "Samuel", "Tatiane", "Umberto", "Vitória", "Wagner", "Xuxa",
   "Yasmin", "Zacarias"
 ];
 
-export function getRandomAdjacencyList({ N = 20, maxConnectionFactor = 3, isolatedFactor = 0.5 } = {}): Graph {
+export function getRandomAdjacencyList({ N = 20, maxConnectionFactor = 1, isolatedFactor = 0.5 } = {}): Graph {
   const nodes = Array.from({ length: N }, (_, id) => ({
     id,
     name: names[Math.floor(Math.random() * names.length)],

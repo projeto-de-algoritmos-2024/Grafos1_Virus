@@ -9,10 +9,12 @@ interface GraphContextType {
     maxConnectionFactor: number,
     isolatedFactor: number
   ) => void;
-  startingNode?: Pessoa;
+  startingNode?: Pessoa | null;
   setStartingNode: (node: Pessoa | null) => void;
-  endingNode?: Pessoa;
+  endingNode?: Pessoa | null;
   setEndingNode: (node: Pessoa | null) => void;
+  selectedAlgorithm: string;
+  setSelectedAlgorithm: (algorithm: string) => void;
 }
 
 const GraphContext = createContext<GraphContextType | undefined>(undefined);
@@ -21,6 +23,8 @@ export const GraphProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [graphData, setGraphData] = useState<Graph>(getRandomAdjacencyList());
+  const [selectedAlgorithm, setSelectedAlgorithm] = useState<string>('BFS');
+
   const [startingNode, setStartingNode] = useState<Pessoa | null>(null);
   const [endingNode, setEndingNode] = useState<Pessoa | null>(null);
 
@@ -43,6 +47,8 @@ export const GraphProvider: React.FC<{ children: ReactNode }> = ({
         setStartingNode,
         endingNode,
         setEndingNode,
+        selectedAlgorithm,
+        setSelectedAlgorithm,
       }}
     >
       {children}
@@ -64,6 +70,8 @@ export function useGraph(): GraphContextType {
     setStartingNode,
     endingNode,
     setEndingNode,
+    selectedAlgorithm,
+    setSelectedAlgorithm,
   } = context;
 
   return {
@@ -73,5 +81,7 @@ export function useGraph(): GraphContextType {
     setStartingNode,
     endingNode,
     setEndingNode,
+    selectedAlgorithm,
+    setSelectedAlgorithm,
   };
 }
