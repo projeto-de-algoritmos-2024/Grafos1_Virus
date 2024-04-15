@@ -1,4 +1,4 @@
-# Diseases
+# Virus
 
 **Número da Lista**: X<br>
 **Conteúdo da Disciplina**: Grafos 1<br>
@@ -32,14 +32,16 @@ VITE <br />
 REACT THREEJS <br />
 
 **Comandos**
-Para instalar o as dependencias rode o <br />
+Com o Node instalado na sua máquina, instale as dependências: <br />
+
 ```
-yarn install 
+npm i
 ```
 
-Após instalar, para rodar o projeto na sua maquina rode o <br />
+Após instalar, basta rodar na sua máquina: <br />
+
 ```
-yarn dev 
+npm run dev
 ```
 
 ## Uso
