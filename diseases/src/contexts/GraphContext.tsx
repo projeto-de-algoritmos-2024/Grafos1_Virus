@@ -15,6 +15,8 @@ interface GraphContextType {
   setEndingNode: (node: Pessoa | null) => void;
   selectedAlgorithm: string;
   setSelectedAlgorithm: (algorithm: string) => void;
+  showNames: boolean;
+  setShowNames: (value: boolean) => void;
 }
 
 const GraphContext = createContext<GraphContextType | undefined>(undefined);
@@ -24,6 +26,7 @@ export const GraphProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
   const [graphData, setGraphData] = useState<Graph>(getRandomAdjacencyList());
   const [selectedAlgorithm, setSelectedAlgorithm] = useState<string>('BFS');
+  const [showNames, setShowNames] = useState<boolean>(true);
 
   const [startingNode, setStartingNode] = useState<Pessoa | null>(null);
   const [endingNode, setEndingNode] = useState<Pessoa | null>(null);
@@ -49,6 +52,8 @@ export const GraphProvider: React.FC<{ children: ReactNode }> = ({
         setEndingNode,
         selectedAlgorithm,
         setSelectedAlgorithm,
+        showNames,
+        setShowNames,
       }}
     >
       {children}
@@ -72,6 +77,8 @@ export function useGraph(): GraphContextType {
     setEndingNode,
     selectedAlgorithm,
     setSelectedAlgorithm,
+    showNames,
+    setShowNames,
   } = context;
 
   return {
@@ -83,5 +90,7 @@ export function useGraph(): GraphContextType {
     setEndingNode,
     selectedAlgorithm,
     setSelectedAlgorithm,
+    showNames,
+    setShowNames,
   };
 }

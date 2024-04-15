@@ -7,7 +7,11 @@ import { useCallback, useEffect, useState } from 'react';
 import { Graph, Pessoa } from '../types/GraphTypes';
 import { useGraph } from '../contexts/GraphContext';
 
-export function GraphMap() {
+interface GraphMapProps {
+  hasSelectedInfection: boolean;
+}
+
+export function GraphMap({ hasSelectedInfection }: GraphMapProps) {
   const {
     graphData,
     setStartingNode,
@@ -15,12 +19,12 @@ export function GraphMap() {
     startingNode,
     endingNode,
     selectedAlgorithm,
+    showNames,
   } = useGraph();
 
   const extraRenderers = [new CSS2DRenderer() as any];
   const [pessoas, setPessoas] = useState<Graph>(graphData);
 
-  // ================== Utils ==================
   function getAdjacentNodes(
     adjacencyList: Record<
       number,
@@ -61,8 +65,6 @@ export function GraphMap() {
       nodes: newNodes,
     }));
   };
-
-  // ================== Algoritmos de Busca ==================
 
   const BFS_GERAL = (nodeId: number) => {
     const queue = [nodeId];
@@ -158,15 +160,15 @@ export function GraphMap() {
   ) => {
     let path = [];
     for (let at = endNodeId; at !== null; at = parent[at]) {
-      if (at === undefined) return []; // Caso o caminho seja interrompido
+      if (at === undefined) return [];
       path.push(at);
     }
     path.reverse();
 
     if (path[0] === startNodeId) {
-      return path.map((nodeId) => pessoas.nodes[nodeId]); // Retorna os nós do caminho
+      return path.map((nodeId) => pessoas.nodes[nodeId]);
     } else {
-      return []; // Caminho não encontrado
+      return [];
     }
   };
 
@@ -174,7 +176,7 @@ export function GraphMap() {
     node.isInfected = true;
     updateGraph(newNodes);
 
-    await delay(500);
+    await delay(100);
     const adjNodes = getAdjacentNodes(pessoas.adjacencyList, node.id);
 
     for (const v of adjNodes) {
@@ -189,7 +191,7 @@ export function GraphMap() {
     newNodes[nodeId].isInfected = true;
     updateGraph(newNodes);
 
-    await delay(500);
+    await delay(100);
 
     const adjNodes = getAdjacentNodes(pessoas.adjacencyList, nodeId);
     for (const v of adjNodes) {
@@ -201,18 +203,22 @@ export function GraphMap() {
 
   const handleClick = useCallback(
     (node: Pessoa) => {
-      switch (selectedAlgorithm) {
-        case 'BFS':
-          BFS_GERAL(node.id);
-          break;
-        case 'DFS':
-          DFS_GERAL(node.id);
-          break;
-        default:
-          break;
+      if (!hasSelectedInfection) {
+        switch (selectedAlgorithm) {
+          case 'BFS':
+            BFS_GERAL(node.id);
+            break;
+          case 'DFS':
+            DFS_GERAL(node.id);
+            break;
+          default:
+            break;
+        }
+      } else {
+        handleSelectNode(node);
       }
     },
-    [pessoas, selectedAlgorithm]
+    [pessoas, selectedAlgorithm, hasSelectedInfection, startingNode, endingNode]
   );
 
   const handleSelectNode = (node: Pessoa) => {
@@ -221,15 +227,15 @@ export function GraphMap() {
     } else if (!endingNode) {
       setEndingNode(node);
     } else {
-      // setStartingNode(node);
-      // setEndingNode(null);
-      BFS(startingNode.id, endingNode.id).then((path) => {
-        if (path.length > 0) {
-          console.log('Caminho encontrado:', path);
-        } else {
-          console.log('Caminho não encontrado');
-        }
-      });
+      // BFS(startingNode.id, endingNode.id).then((path) => {
+      //   if (path.length > 0) {
+      //     console.log('Caminho encontrado:', path);
+      //   } else {
+      //     console.log('Caminho não encontrado');
+      //   }
+      // });
+      setStartingNode(node);
+      setEndingNode(null);
     }
   };
 
@@ -241,7 +247,6 @@ export function GraphMap() {
     <ForceGraph3D
       graphData={pessoas}
       onNodeClick={handleClick}
-      // onNodeClick={handleSelectNode}
       nodeVal={15}
       nodeColor={(node) => {
         if (startingNode && node.id === startingNode.id) {
@@ -257,13 +262,17 @@ export function GraphMap() {
       nodeLabel={(node) => `[${node.id}] ${node.name}`}
       nodeOpacity={0.9}
       nodeThreeObject={(node) => {
-        const nodeEl = document.createElement('div');
-        nodeEl.textContent = `[${node.id}] ${node.name}`;
-        nodeEl.style.color = '#fff';
-        nodeEl.style.fontSize = '12px';
-        nodeEl.style.fontWeight = '600';
-        nodeEl.className = 'node-label';
-        return new CSS2DObject(nodeEl);
+        if (showNames) {
+          const nodeEl = document.createElement('div');
+          nodeEl.textContent = `[${node.id}] ${node.name}`;
+          nodeEl.style.color = '#fff';
+          nodeEl.style.fontSize = '12px';
+          nodeEl.style.fontWeight = '600';
+          nodeEl.className = 'node-label';
+          return new CSS2DObject(nodeEl);
+        }
+
+        return new CSS2DObject(document.createElement('div'));
       }}
       nodeThreeObjectExtend={true}
       extraRenderers={extraRenderers}

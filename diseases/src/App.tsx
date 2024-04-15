@@ -22,7 +22,7 @@ function App() {
             setHasSelectedInfection={setHasSelectedInfection}
           />
         )}
-        <GraphMap />
+        <GraphMap hasSelectedInfection={hasSelectedInfection} />
       </div>
     </GraphProvider>
   );

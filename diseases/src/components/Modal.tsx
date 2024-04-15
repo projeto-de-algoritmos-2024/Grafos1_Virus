@@ -7,7 +7,13 @@ interface IModelProps {
 }
 
 export function Modal({ setHasSelectedInfection }: IModelProps) {
-  const { getGraphData, selectedAlgorithm, setSelectedAlgorithm } = useGraph();
+  const {
+    getGraphData,
+    selectedAlgorithm,
+    setSelectedAlgorithm,
+    showNames,
+    setShowNames,
+  } = useGraph();
   const [components, setComponents] = useState(20);
   const [maxConnectionFactor, setMaxConnectionFactor] = useState(1);
   const [isolatedFactor, setIsolatedFactor] = useState(0.5);
@@ -52,7 +58,7 @@ export function Modal({ setHasSelectedInfection }: IModelProps) {
             className={
               selectedAlgorithm === 'BFS'
                 ? 'text-xs font-bold px-2 bg-green-600 rounded cursor-pointer'
-                : 'text-xs font-bold px-2 bg-stone-700 rounded cursor-pointer'
+                : 'text-xs font-bold px-2 bg-stone-600 rounded cursor-pointer'
             }
             onClick={() => setSelectedAlgorithm('BFS')}
           >
@@ -62,7 +68,7 @@ export function Modal({ setHasSelectedInfection }: IModelProps) {
             className={
               selectedAlgorithm === 'DFS'
                 ? 'text-xs font-bold px-2 bg-green-600 rounded cursor-pointer'
-                : 'text-xs font-bold px-2 bg-stone-700 rounded cursor-pointer'
+                : 'text-xs font-bold px-2 bg-stone-600 rounded cursor-pointer'
             }
             onClick={() => setSelectedAlgorithm('DFS')}
           >
@@ -71,6 +77,14 @@ export function Modal({ setHasSelectedInfection }: IModelProps) {
         </div>
       </div>
       <div className="mt-4 flex flex-col gap-2">
+        <div className="flex gap-2 mb-2">
+          <input
+            type="checkbox"
+            checked={showNames}
+            onChange={() => setShowNames(!showNames)}
+          />
+          <label className="text-xs text-stone-300">Mostrar nomes</label>
+        </div>
         <h1>Pessoas</h1>
         <input
           className="w-full p-2 rounded-lg bg-stone-700 focus:outline-none"
