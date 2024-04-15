@@ -16,18 +16,18 @@ export function getRandomAdjacencyList({ N = 20, maxConnectionFactor = 1, isolat
     group: Math.floor(Math.random() * (1 / isolatedFactor))
   }));
 
-  const groups = nodes.reduce((acc, node) => {
+  const groups = nodes.reduce((acc: any, node) => {
     acc[node.group] = acc[node.group] || [];
     acc[node.group].push(node.id);
     return acc;
   }, {});
 
-  const adjacencyList = nodes.reduce((acc, node) => {
+  const adjacencyList = nodes.reduce((acc: any, node) => {
     acc[node.id] = { outgoing: [], incoming: [] };
     return acc;
   }, {});
 
-  Object.values(groups).forEach((group: number[]) => {
+  Object.values(groups).forEach((group: any) => {
     group.forEach(sourceId => {
       const targetIds = group.filter(id => id !== sourceId);
       const shuffleArray = (array: number[]) => {

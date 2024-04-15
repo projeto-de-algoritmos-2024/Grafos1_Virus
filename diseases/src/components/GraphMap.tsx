@@ -29,7 +29,7 @@ export function GraphMap() {
         incoming: { source: number; value: number }[];
       }
     >,
-    targetNodeId: number
+    targetNodeId: any
   ): number[] {
     const adjacentNodes = new Set<number>();
 

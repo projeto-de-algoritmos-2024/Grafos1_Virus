@@ -20,5 +20,11 @@ export interface Pessoa {
 export interface Graph {
   nodes: Pessoa[];
   links: Link[];
-  adjacencyList: Record<number, { target: number; value: number; }[]>
+  adjacencyList: Record<
+    number,
+    {
+      outgoing: { target: number; value: number }[];
+      incoming: { source: number; value: number }[];
+    }
+  >
 }
