@@ -20,6 +20,10 @@ export function GraphMap({ hasSelectedInfection }: GraphMapProps) {
     endingNode,
     selectedAlgorithm,
     showNames,
+    triggerBFS,
+    setTriggerBFS,
+    isRunning,
+    setIsRunning,
   } = useGraph();
 
   const extraRenderers = [new CSS2DRenderer() as any];
@@ -129,7 +133,7 @@ export function GraphMap({ hasSelectedInfection }: GraphMapProps) {
         const currentNode = queue.shift();
 
         if (currentNode === endNodeId) {
-          await delay(500);
+          await delay(250);
           updateGraph(newNodes);
           return reconstructPath(parent, startNodeId, endNodeId);
         }
@@ -142,7 +146,7 @@ export function GraphMap({ hasSelectedInfection }: GraphMapProps) {
             parent[nextNode] = currentNode;
             newNodes[nextNode].isInfected = true;
 
-            await delay(500);
+            await delay(250);
             updateGraph(newNodes);
           }
         }
@@ -204,6 +208,8 @@ export function GraphMap({ hasSelectedInfection }: GraphMapProps) {
   const handleClick = useCallback(
     (node: Pessoa) => {
       if (!hasSelectedInfection) {
+        setIsRunning(true);
+
         switch (selectedAlgorithm) {
           case 'BFS':
             BFS_GERAL(node.id);
@@ -214,6 +220,8 @@ export function GraphMap({ hasSelectedInfection }: GraphMapProps) {
           default:
             break;
         }
+
+        setIsRunning(false);
       } else {
         handleSelectNode(node);
       }
@@ -227,13 +235,6 @@ export function GraphMap({ hasSelectedInfection }: GraphMapProps) {
     } else if (!endingNode) {
       setEndingNode(node);
     } else {
-      // BFS(startingNode.id, endingNode.id).then((path) => {
-      //   if (path.length > 0) {
-      //     console.log('Caminho encontrado:', path);
-      //   } else {
-      //     console.log('Caminho não encontrado');
-      //   }
-      // });
       setStartingNode(node);
       setEndingNode(null);
     }
@@ -242,6 +243,26 @@ export function GraphMap({ hasSelectedInfection }: GraphMapProps) {
   useEffect(() => {
     setPessoas(graphData);
   }, [graphData]);
+
+  useEffect(() => {
+    if (triggerBFS && startingNode && endingNode) {
+      BFS(startingNode.id, endingNode.id).then(async (path) => {
+        const newNodes = [...pessoas.nodes];
+
+        newNodes.forEach((node) => {
+          node.isInfected = false;
+        });
+
+        for (const node of path) {
+          newNodes[node.id].isPath = true;
+          await delay(250);
+          updateGraph(newNodes);
+        }
+      });
+
+      setTriggerBFS(false);
+    }
+  }, [triggerBFS, startingNode, endingNode]);
 
   return (
     <ForceGraph3D
@@ -255,6 +276,8 @@ export function GraphMap({ hasSelectedInfection }: GraphMapProps) {
           return '#FFCA80';
         } else if (node.isInfected) {
           return '#FF9580';
+        } else if (node.isPath) {
+          return '#FF80D5';
         } else {
           return '#80FFEA';
         }

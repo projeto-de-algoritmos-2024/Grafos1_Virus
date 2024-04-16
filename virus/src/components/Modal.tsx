@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useGraph } from '../contexts/GraphContext';
 
 interface IModelProps {
@@ -13,6 +13,7 @@ export function Modal({ setHasSelectedInfection }: IModelProps) {
     setSelectedAlgorithm,
     showNames,
     setShowNames,
+    isRunning,
   } = useGraph();
   const [components, setComponents] = useState(20);
   const [maxConnectionFactor, setMaxConnectionFactor] = useState(1);
@@ -115,6 +116,7 @@ export function Modal({ setHasSelectedInfection }: IModelProps) {
         <button
           className="bg-stone-900 text-white p-2 rounded-lg mt-2 hover:bg-white hover:text-stone-900 transition-colors font-semibold disabled:bg-stone-700 disabled:text-stone-900 disabled:cursor-not-allowed"
           onClick={handleClick}
+          disabled={isRunning}
         >
           Gerar Grafo
         </button>

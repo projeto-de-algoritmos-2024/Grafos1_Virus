@@ -15,7 +15,7 @@ export interface Pessoa {
   fy: number;
   fz: number;
   childLinks: Link[];
-
+  isPath: boolean;
 }
 export interface Graph {
   nodes: Pessoa[];

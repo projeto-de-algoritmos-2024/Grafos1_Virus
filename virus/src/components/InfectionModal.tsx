@@ -18,6 +18,8 @@ export function InfectionModal({
     endingNode,
     selectedAlgorithm,
     setSelectedAlgorithm,
+    triggerBFS,
+    setTriggerBFS,
   } = useGraph();
 
   const handleReturn = () => {
@@ -30,7 +32,7 @@ export function InfectionModal({
     <div className="w-[250px] bg-stone-800 absolute top-4 left-4 z-[1000] rounded-lg p-4 text-white border-violet-900 border-2">
       <h1 className="text-2xl font-semibold">Vírus</h1>
       <div className="mt-4 flex flex-col gap-2">
-        <div className="mb-4">
+        {/* <div className="mb-4">
           <p className="text-xs text-stone-300">
             Selecione um algoritmo e clique em qualquer pessoa para simular uma
             infecção:
@@ -57,7 +59,7 @@ export function InfectionModal({
               DFS
             </div>
           </div>
-        </div>
+        </div> */}
         <div className="p-2 bg-stone-700 rounded">
           <h1 className="">Clique na pessoa que começará a infecção</h1>
           <input
@@ -77,7 +79,10 @@ export function InfectionModal({
           />
         </div>
 
-        <button className="bg-stone-900 text-white p-2 rounded-lg mt-2 hover:bg-white hover:text-stone-900 transition-colors font-semibold">
+        <button
+          className="bg-stone-900 text-white p-2 rounded-lg mt-2 hover:bg-white hover:text-stone-900 transition-colors font-semibold"
+          onClick={() => setTriggerBFS(true)}
+        >
           Infectar
         </button>
         <button
