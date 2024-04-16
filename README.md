@@ -2,6 +2,7 @@
 
 **Número da Lista**: 1<br>
 **Conteúdo da Disciplina**: Grafos 1<br>
+**Vídeo de Apresentação**: [Link do vídeo](https://youtu.be/PBbEQI8cfTU)
 
 ## Alunos
 
