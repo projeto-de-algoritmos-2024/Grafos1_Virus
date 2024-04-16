@@ -1,6 +1,4 @@
-import { useState } from 'react';
 import { useGraph } from '../contexts/GraphContext';
-import { Pessoa } from '../types/GraphTypes';
 
 interface IInfectionModalProps {
   hasSelectedInfection: boolean;
@@ -8,7 +6,6 @@ interface IInfectionModalProps {
 }
 
 export function InfectionModal({
-  hasSelectedInfection,
   setHasSelectedInfection,
 }: IInfectionModalProps) {
   const {
@@ -16,9 +13,6 @@ export function InfectionModal({
     startingNode,
     setEndingNode,
     endingNode,
-    selectedAlgorithm,
-    setSelectedAlgorithm,
-    triggerBFS,
     setTriggerBFS,
   } = useGraph();
 
@@ -65,7 +59,7 @@ export function InfectionModal({
           <input
             type="text"
             disabled
-            className="mt-2 rounded p-1"
+            className="mt-2 rounded p-1 w-full"
             value={startingNode?.name}
           />
         </div>
@@ -74,7 +68,7 @@ export function InfectionModal({
           <input
             type="text"
             disabled
-            className="mt-2 rounded p-1"
+            className="mt-2 rounded p-1 w-full"
             value={endingNode?.name}
           />
         </div>
